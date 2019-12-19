@@ -45,6 +45,7 @@ doAnalysis = True
 
 '---------------------------  Implementation Below  ---------------------------'
 
+#sourced from https://gamepress.gg/pokemongo/cp-multiplier
 CPM = [[1, 0.094],
 [1.5, 0.1351374318],
 [2, 0.16639787],
@@ -136,6 +137,8 @@ CPM = [[1, 0.094],
 [45, 0.81529999]]
 
 
+#sourced from https://www.reddit.com/r/TheSilphRoad/comments/a3cl8b/pvp_spreadsheet_of_pok%C3%A9mon_stats/
+# and https://gamepress.gg/pokemongo/pokemon/413-trash
 #hp atk def
 PKMNstatsStr = """#1 Bulbasaur    128 118 111
 #2 Ivysaur  155 151 143

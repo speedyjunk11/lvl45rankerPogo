@@ -28,7 +28,7 @@ import math
 
 #Note: put print before function calls to get output
 def doFnCalls():
-    print evalPkmn("Nidoking","ultra",0,13,15)
+    evalPkmn("Nidoking","ultra",0,13,15)
     #print getStat(name,stat,iv,lvl)
     #print getCP(name,atkiv,dfiv,stiv,lvl)
 
@@ -37,7 +37,7 @@ def doFnCalls():
 
 
 
-doAnalysis = True
+doAnalysis = False
 #^set this flag to True if you want the program to run analysis on which
 #pokemon get significantly different from the buddy level boost
 #(but it will take a while to crunch all the numbers)
@@ -138,7 +138,7 @@ CPM = [[1, 0.094],
 
 
 #sourced from https://www.reddit.com/r/TheSilphRoad/comments/a3cl8b/pvp_spreadsheet_of_pok%C3%A9mon_stats/
-# and https://gamepress.gg/pokemongo/pokemon/413-trash
+# and https://gamepress.gg/pokemongo/pokemon/413-trash and https://thesilphroad.com/species-stats
 #hp atk def
 PKMNstatsStr = """#1 Bulbasaur    128 118 111
 #2 Ivysaur  155 151 143
@@ -657,6 +657,54 @@ PKMNstatsStr = """#1 Bulbasaur    128 118 111
 #492 ShayminLand   225 210 210
 #492 ShayminSky   225 261 166
 #493 Arceus 236 238 238
+#495 Snivy 128 88 107
+#496 Servine 155 122 152
+#497 Serperior 181 161 204
+#498 Tepig 163 115 85
+#499 Pignite 207 106 173
+#500 Emboar 242 235 127
+#501 Oshawott 146 117 85
+#502 Dewott 181 159 116
+#503 Samurott 216 157 212
+#504 Patrat 128 98 73
+#505 Watchog 155 165 139
+#506 Lillipup 128 86 107
+#507 Herdier 163 145 126
+#508 Stoutland 198 206 182
+#509 Purrloin 121 98 73
+#510 Liepard 162 187 106
+#511 Pansage 137 104 94
+#512 Simisage 181 206 133
+#513 Pansear 137 104 94
+#514 Simisear 181 206 133
+#515 Panpour 137 104 94
+#516 Simipour 181 206 133
+#519 Pidove 137 98 80
+#520 Tranquill 158 144 107
+#521 Unfezant 190 226 146
+#522 Blitzle 128 118 64
+#523 Zebstrika 181 211 136
+#529 Drillbur 155 154 85
+#530 Excadrill 242 255 129
+#562 Yamask 116 95 141
+#563 Cofagrigus 151 163 237
+#590 Foongus 170 97 91
+#591 Amoonguss 249 155 139
+#597 Ferroseed 127 82 155
+#598 Ferrothorn 179 158 223
+#599 Klink 120 98 121
+#600 Klang 155 150 174
+#601 Klinklang 155 199 214
+#607 Litwick 137 108 98
+#608 Lampent 155 159 115
+#609 Chandelure 155 271 182
+#622 Golett 153 127 92
+#623 Golurk 205 222 154
+#631 Heatmor 198 204 129
+#632 Durant 151 217 188
+#633 Deino 141 116 93
+#634 Zweilous 176 159 135
+#635 Hydreigon 211 256 188
 #808 Meltan 130 118 130
 #809 Melmetal   264 226 190"""
 
@@ -740,6 +788,10 @@ def calcAllCombs(name, league, doAnalysis = False):
 # print Sab[0]
 
 def evalPkmn(name, league, atkiv, dfiv, stiv, doAnalysis = False):
+    outputStr = "|"+name
+    if league == "great": outputStr += "|Great"
+    else: outputStr += "|Ultra"
+    outputStr += "|" + str(int(getCP(name,15,15,15,40)))
     combs = calcAllCombs(name, league)
     combs.sort(key = lambda x: x[4], reverse = True)
     
@@ -772,6 +824,9 @@ def evalPkmn(name, league, atkiv, dfiv, stiv, doAnalysis = False):
     print
     print("Best Spread <= lvl40:\t"),
     print filter(lambda x: x[5]<=40, combs)[0]
+    bestSpread = filter(lambda x: x[5]<=40, combs)[0]
+    outputStr += "|"+str(bestSpread[-3])+"/"+str(bestSpread[-2])+"/"+str(bestSpread[-1])+" @ lvl" + str(bestSpread[-4])
+    outputStr += "|" + str(int(bestSpread[4]))
 
     # combs.sort(key = lambda x: x[4], reverse = True)
 
@@ -786,6 +841,10 @@ def evalPkmn(name, league, atkiv, dfiv, stiv, doAnalysis = False):
 
     print("Rank 1 <= lvl45:\t"),
     print combs[0]
+    outputStr += "|"+str(combs[0][-3])+"/"+str(combs[0][-2])+"/"+str(combs[0][-1])+" @ lvl" + str(combs[0][-4])
+    outputStr += "|" + str(int(combs[0][4]))
+    outputStr += "|\\~%.2f|" % ((combs[0][4]/filter(lambda x: x[5]<=40, combs)[0][4]-1)*100)
+
 
     combs.sort(key = lambda x: x[1], reverse = True)
 
@@ -818,7 +877,7 @@ def evalPkmn(name, league, atkiv, dfiv, stiv, doAnalysis = False):
     #Note: ranks are a little off from GoStadium, not sure why...
     #      current theories are rounding differences, or that the > lvl40 pkmn affect my ranks
 
-    return ""
+    return outputStr
 
 
 # print evalPkmn("Sableye", "great", 13, 15, 15)
@@ -860,3 +919,174 @@ def fnCallsWrapper():
 
 
 fnCallsWrapper()
+
+def redditTable(name,league):
+    return evalPkmn(name,league,15,15,15)
+
+toRedditPre = '''Bulbasaur
+Ivysaur
+Venusaur
+Charmander
+Charmeleon
+Charizard
+Squirtle
+Wartortle
+Blastoise
+Caterpie
+Metapod
+Butterfree
+Weedle
+Kakuna
+Beedrill
+Pidgey
+Pidgeotto
+Pidgeot
+Rattat
+ARattata
+Raticate
+ARaticate
+Spearo
+Fearow
+Ekans
+Arbok
+Pikach
+Raichu
+ARaichu
+Sandshrew
+ASandshrew
+Sandslash
+ASandslash
+NidoranF
+Nidorina
+Nidoqueen
+NidoranM
+Nidorino GL
+Nidoking UL
+Clefable UL
+ANinetales UL
+Vileplume UL
+Dugtrio GL
+Golduck UL
+Poliwhirl GL
+Poliwrath UL
+Weepinbell GL
+Victreebel UL
+Tentacruel UL
+Rapidash UL
+Slowbro UL
+Magnemite GL
+Magneton UL
+Dodrio UL
+Grimer GL
+AGrimer GL
+Cloyster UL
+Krabby GL
+Hitmonlee UL
+Hitmonchan UL
+Lickitung GL
+Kangaskhan UL
+Starmie UL
+Jynx UL
+Electabuzz UL
+Magmar UL
+Tauros UL
+Lapras UL
+Omanyte GL
+Kabuto GL
+Bayleef GL
+Meganium UL
+Crobat UL
+Flaaffy GL
+Azumarill GL
+Politoed UL
+Jumpluff GL
+Yanma GL
+Murkrow GL
+Slowking UL
+Steelix UL
+Granbull UL
+Piloswine UL
+Corsola GL
+Octillery UL
+Houndoom UL
+Kingdra UL
+Miltank UL
+Ludicolo UL
+Shiftry UL
+Breloom UL
+Exploud UL
+Delcatty GL
+Sableye GL
+Mawile GL
+Medicham GL
+Manectric UL
+Wailmer GL
+Grumpig UL
+Flygon UL
+Zangoose UL
+Lunatone UL
+Solrock UL
+Crawdaunt UL
+Anorith GL
+Castform GL
+Dusclops GL
+Absol UL
+Huntail UL
+Gorebyss UL
+Relicanth UL
+Registeel UL
+DeoxysAtk UL
+Monferno GL
+Infernape UL
+Luxio GL
+Bastiodon GL
+WormadamT GL
+Floatzel UL
+Gastrodon UL
+Ambipom UL
+Drifblim UL
+Mismagius UL
+Skuntank UL
+Hippopotas GL
+Drapion UL
+Toxicroak UL
+Abomasnow UL
+Lickilicky UL
+Gliscor UL
+Dusknoir UL
+Uxie UL
+Servine GL
+Pignite GL
+Samurott UL
+Herdier GL
+Simisage UL
+Simisear UL
+Simipour UL
+Tranquill GL
+Zebstrika UL
+Drillbur GL
+Ferrothorn UL
+Klinklang UL
+Lampent GL
+Heatmor UL
+Durant UL'''
+toRedditPre = toRedditPre.split('\n')
+toReddit = []
+for entr in toRedditPre:
+    addend = []
+    for item in entr.split(' '):
+        if item == "GL": addend.append('great')
+        elif item == 'UL': addend.append('ultra')
+        else: addend.append(item)
+    toReddit.append(addend)
+
+# tableText = []
+# for combo in toReddit:
+#     tableText.append(redditTable(combo[0],combo[1]))
+
+# print
+# print
+# print
+
+# for line in tableText:
+#     print line

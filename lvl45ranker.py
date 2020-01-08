@@ -24,20 +24,21 @@ import math
 #                                        name/ivs/lvl
 #   def evalPkmn(name, league, atkiv, dfiv, stiv):
 #               Will return a the ranking and additional stats about a pokemon
-#               given name, league ('great','ultra','master'), & ivs
+#               given name, league ('great','ultr a','master'), & ivs
 
 #Note: put print before function calls to get output
 def doFnCalls():
-    evalPkmn("Nidoking","ultra",0,13,15)
-    #print getStat(name,stat,iv,lvl)
-    #print getCP(name,atkiv,dfiv,stiv,lvl)
+    # evalPkmn("Liepard","great",14,15,15)
+    # print getStat("Registeel","st",15,41)
+    # print getCP("Medicham",14,15,15,45)
+    pass
 
 #Lists in output are of the form:
 #   [cp, atk, df, st, statprod, lvl, atkiv, defiv, staiv]
 
 
 
-doAnalysis = False
+doAnalysis = True
 #^set this flag to True if you want the program to run analysis on which
 #pokemon get significantly different from the buddy level boost
 #(but it will take a while to crunch all the numbers)
@@ -126,15 +127,15 @@ CPM = [[1, 0.094],
 [39.5, 0.7874736075],
 [40, 0.7903],
 [40.5, 0.792803946731],
-[41, 0.79530001],
-[41.5, 0.797803921997],
-[42, 0.8003],
-[42.5, 0.802803892616],
-[43, 0.8053],
-[43.5, 0.807803863507],
-[44, 0.81029999],
-[44.5, 0.812803834725],
-[45, 0.81529999]]
+[41, 0.79530001]]#,
+# [41.5, 0.797803921997],
+# [42, 0.8003],
+# [42.5, 0.802803892616],
+# [43, 0.8053],
+# [43.5, 0.807803863507],
+# [44, 0.81029999],
+# [44.5, 0.812803834725],
+# [45, 0.81529999]]
 
 
 #sourced from https://www.reddit.com/r/TheSilphRoad/comments/a3cl8b/pvp_spreadsheet_of_pok%C3%A9mon_stats/
@@ -751,7 +752,7 @@ def calcAllCombs(name, league, doAnalysis = False):
     if not(doAnalysis): print "Calculating for " + name + ":"#\nConsidering level...."
     pkmn = nameToPkmn(name)
     cpCombs = [] #[[cp, atk, df, st, prod, lvl, atkiv, defiv, staiv], ...]
-    for dlvl in xrange(2,91):
+    for dlvl in xrange(2,83):
         # print lvl
         lvl = dlvl*1.0/2
         minCP = getCP(name,0,0,0,lvl)
@@ -839,7 +840,7 @@ def evalPkmn(name, league, atkiv, dfiv, stiv, doAnalysis = False):
     print combs[0][4]/filter(lambda x: x[5]<=40, combs)[0][4]-1
         
 
-    print("Rank 1 <= lvl45:\t"),
+    print("Rank 1 <= lvl41:\t"),
     print combs[0]
     outputStr += "|"+str(combs[0][-3])+"/"+str(combs[0][-2])+"/"+str(combs[0][-1])+" @ lvl" + str(combs[0][-4])
     outputStr += "|" + str(int(combs[0][4]))
@@ -894,14 +895,14 @@ def analyze():
         dfVal = getStat(pkmn[1],"df",15,40)
         stVal = math.floor(getStat(pkmn[1],"st",15,40))
         prod = atkVal * dfVal * stVal
-        if ((1350 < lvl40cp) and (lvl40cp < 1650)):
+        if ((1400 < lvl40cp) and (lvl40cp < 1600)):
             print pkmn[1] + " GL"
             print "Stats @ lvl40 15/15/15:\t\t",
             print [lvl40cp, atkVal, dfVal, stVal, prod, 40, 15, 15, 15]
             evalPkmn(pkmn[1],"great",15,15,15, doAnalysis = True)
             print "-----------"
             print
-        elif((2300 < lvl40cp) and (lvl40cp < 2700)):
+        elif((2400 < lvl40cp) and (lvl40cp < 2600)):
             print pkmn[1] + " UL"
             print "Stats @ lvl40 15/15/15:\t\t",
             print [lvl40cp, atkVal, dfVal, stVal, prod, 40, 15, 15, 15]
